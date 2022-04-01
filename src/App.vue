@@ -10,9 +10,6 @@
 
       <router-link v-if="!isLoggedIn" to="/register" class="mx-2">Register</router-link>
       <router-link v-if="!isLoggedIn" to="/login" class="mx-2">Login</router-link>
-      <!--      <router-link to="/dashboard" class="mx-2">Dashboard</router-link>-->
-      <!--      <router-link to="/admin" class="mx-2">Admin</router-link>-->
-      <!--      <router-link to="/about" class="mx-2">About</router-link>-->
 
       <v-btn icon
              v-if="isLoggedIn"
@@ -48,12 +45,9 @@
             :key="item.title"
             link
             :prepend-icon="item.icon"
-
             :value="item.title"
         >
-          <v-list-item-title>
             <router-link :to="item.path">{{ item.title }}</router-link>
-          </v-list-item-title>
         </v-list-item>
       </v-list>
 
@@ -108,7 +102,7 @@ export default {
   name: 'App',
   data: () => ({
     items: [
-      { title: 'Dashboard', icon: 'mdi-view-dashboard', path: '/dashboard' },
+      { title: 'Home page', icon: 'mdi-view-dashboard', path: '/' },
       { title: 'Favorites', icon: 'mdi-image', path: '/favorites' },
       { title: 'About', icon: 'mdi-help-box', path: '/about' },
     ],

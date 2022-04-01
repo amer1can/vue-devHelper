@@ -13,6 +13,8 @@ class Db {
              name text,
              email text UNIQUE,
              user_pass text,
+             favorites text,
+             likes text,
              is_admin bool   
             )`
         return this.db.run(sql)
@@ -46,6 +48,16 @@ class Db {
                 callback(err)
             }
         )
+    }
+
+    updateFavorites(favorites, id, callback) {
+        return this.db.run(`
+            UPDATE user
+            SET favorites = ?
+            WHERE id = ?
+        `, favorites, id, (err) => {
+            callback(err)
+        })
     }
 }
 module.exports = Db

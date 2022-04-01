@@ -5,6 +5,7 @@
       <NoteCard v-for="note in notes"
                 :key="note.id"
                 :note="note"
+                :markFavorite="userFavorites.includes((note.id).toString())"
       />
     </div>
     <div v-else><h1 class="text-center">No notes found (</h1></div>
@@ -23,8 +24,15 @@ export default {
   layout: "default",
   computed: {
     ...mapState([
-        'notes'
-    ])
+        'notes',
+        'user'
+      ]),
+    userFavorites() {
+      return this.user.favorites.toString().split(',')
+    }
+  },
+  mounted() {
+    console.log(this.userFavorites.includes('1'))
   }
 }
 </script>

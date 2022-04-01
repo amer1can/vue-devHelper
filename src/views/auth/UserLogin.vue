@@ -85,7 +85,7 @@ export default {
                     this.$router.push('admin')
                   }
                   else {
-                    this.$router.push('dashboard')
+                    this.$router.push('home')
                   }
                 }
               }
@@ -93,9 +93,6 @@ export default {
             })
             .catch(err => {
               this.$store.commit('toggleLogin',false)
-              // if(err.response.status === 404) {
-              //   this.error = err.response.data
-              // }
               console.error(err.response)
             })
       }

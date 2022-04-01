@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 
-const db = new DB('sqlitedbv2')
+const db = new DB('userdb')
 const notesDb = new Notes('notesdb')
 const app = express()
 
@@ -92,12 +92,21 @@ router.post('/login', (req, res) => {
         })
     })
 })
+
 router.get('/all', (req, res) => {
     db.selectAll((err, rows) => {
         if (err) return res.status(500).send('Error on the server')
         res.status(200).send(rows)
     })
 })
+
+router.patch('/updateFavorites/:id',  (req, res) => {
+    db.updateFavorites(req.body.data, req.params.id, (err) => {
+        if (err) return res.status(500).send('Error on the server')
+        res.status(200).send('Updated favorites')
+    })
+})
+
 app.use(router)
 
 //- notes routes
@@ -153,10 +162,18 @@ notesRouter.delete('/:id', (req, res) => {
         if (err) return res.status(500).send('There was a problem deleting the note.')
         res.status(200).send('Note successfully deleted')
     })
+})
 
+notesRouter.patch('/updateViews/:id', (req, res) => {
+    notesDb.updateViews(req.params.id, (err) => {
+        if (err) return res.status(500).send('Error on the server')
+        res.status(200).send('Updated favorites')
+    })
 })
 
 app.use('/notes', notesRouter)
+
+
 
 const port = process.env.PORT || 3001
 app.listen(port, ()=> {

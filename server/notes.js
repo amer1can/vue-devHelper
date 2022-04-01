@@ -62,6 +62,16 @@ class Notes {
             callback(err)
         })
     }
+
+    updateViews(id, callback) {
+        return this.db.run(`
+            UPDATE notes
+            SET views = views + 1
+            WHERE id = ?
+        `, id, (err) => {
+            callback(err)
+        })
+    }
 }
 
 
