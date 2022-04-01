@@ -5,7 +5,8 @@
       <NoteCard v-for="note in notes"
                 :key="note.id"
                 :note="note"
-                :markFavorite="userFavorites.includes((note.id).toString())"
+                :markFavorite="userFavorites ? userFavorites.includes((note.id).toString()) : false"
+                :markLike="userLikes ? userLikes.includes((note.id).toString()) : false"
       />
     </div>
     <div v-else><h1 class="text-center">No notes found (</h1></div>
@@ -28,11 +29,20 @@ export default {
         'user'
       ]),
     userFavorites() {
-      return this.user.favorites.toString().split(',')
-    }
+      if(this.user.favorites === null) { return false }
+      else {
+        return this.user.favorites.toString().split(',')
+      }
+    },
+    userLikes() {
+      if(this.user.likes === null) return false
+      else {
+        return this.user.likes.toString().split(',')
+      }
+    },
   },
   mounted() {
-    console.log(this.userFavorites.includes('1'))
+    // console.log(this.userFavorites.includes('1'))
   }
 }
 </script>

@@ -27,6 +27,15 @@ class Db {
             callback(err, row)
             })
     }
+    selectById(id, callback) {
+        return this.db.get(
+            `SELECT * FROM user WHERE id = ?`,
+            [id], function(err, row) {
+            callback(err, row)
+            })
+    }
+
+
     insertAdmin(user, callback) {
         return this.db.run(
             `INSERT INTO user (name, email, user_pass, is_admin) VALUES (?,?,?,?)`,
@@ -56,6 +65,15 @@ class Db {
             SET favorites = ?
             WHERE id = ?
         `, favorites, id, (err) => {
+            callback(err)
+        })
+    }
+    updateLikes(likes, id, callback) {
+        return this.db.run(`
+            UPDATE user
+            SET likes = ?
+            WHERE id = ?
+        `, likes, id, (err) => {
             callback(err)
         })
     }

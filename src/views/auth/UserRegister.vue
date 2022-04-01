@@ -91,7 +91,7 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
-          is_admin: this.is_admin
+          is_admin: this.is_admin,
         })
             .then(response => {
               localStorage.setItem('user', JSON.stringify(response.data.user))

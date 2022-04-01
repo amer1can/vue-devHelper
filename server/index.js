@@ -23,7 +23,9 @@ router.post('/register', function(req, res) {
         req.body.name,
         req.body.email,
         bcrypt.hashSync(req.body.password, 8),
-        req.body.is_admin
+        req.body.is_admin,
+        req.body.favorites,
+        req.body.likes
     ], function (err) {
         if (err) return res.status(500).send("There was a problem registering the user.")
 
@@ -70,9 +72,21 @@ router.get('/me', function(req, res) {
             auth: false,
             message: 'Failed to authenticate token.'
         })
-        res.status(200).send(decoded)
+        // res.status(200).send(decoded)
+
+        db.selectById(decoded.id, (err, user) => {
+            if (err) return res.status(500).send('Error on the server')
+            if (!user) return res.status(404).send('No user found')
+            res.status(200).send({
+                auth: true,
+                token,
+                user
+            })
+        })
+
     })
 })
+
 router.post('/login', (req, res) => {
     db.selectByEmail(req.body.email, (err, user) => {
         if (err) return res.status(500).send('Error on the server')
@@ -104,6 +118,12 @@ router.patch('/updateFavorites/:id',  (req, res) => {
     db.updateFavorites(req.body.data, req.params.id, (err) => {
         if (err) return res.status(500).send('Error on the server')
         res.status(200).send('Updated favorites')
+    })
+})
+router.patch('/updateLikes/:id',  (req, res) => {
+    db.updateLikes(req.body.data, req.params.id, (err) => {
+        if (err) return res.status(500).send('Error on the server')
+        res.status(200).send('Updated likes')
     })
 })
 
@@ -167,7 +187,20 @@ notesRouter.delete('/:id', (req, res) => {
 notesRouter.patch('/updateViews/:id', (req, res) => {
     notesDb.updateViews(req.params.id, (err) => {
         if (err) return res.status(500).send('Error on the server')
-        res.status(200).send('Updated favorites')
+        res.status(200).send('Updated views')
+    })
+})
+
+notesRouter.patch('/incLikes/:id', (req, res) => {
+    notesDb.incLike(req.params.id, (err) => {
+        if (err) return res.status(500).send('Error on the server')
+        res.status(200).send('Inc like')
+    })
+})
+notesRouter.patch('/decLikes/:id', (req, res) => {
+    notesDb.decLike(req.params.id, (err) => {
+        if (err) return res.status(500).send('Error on the server')
+        res.status(200).send('Dec like')
     })
 })
 

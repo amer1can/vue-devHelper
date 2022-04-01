@@ -72,6 +72,25 @@ class Notes {
             callback(err)
         })
     }
+
+    incLike(id, callback) {
+        return this.db.run(`
+            UPDATE notes
+            SET  likes = likes + 1
+            WHERE id = ?
+        `, id, (err) => {
+            callback(err)
+        })
+    }
+    decLike(id, callback) {
+        return this.db.run(`
+            UPDATE notes
+            SET  likes = likes - 1
+            WHERE id = ?
+        `, id, (err) => {
+            callback(err)
+        })
+    }
 }
 
 

@@ -68,7 +68,8 @@
           <v-btn
               size="x-small"
               icon="mdi-heart"
-              color="primary"
+              :color="markLike ? 'primary' : 'white'"
+              @click="toggleLikes"
           ></v-btn>
         </div>
         <div class="views d-inline">
@@ -106,6 +107,10 @@ export default {
     markFavorite: {
       type: Boolean,
       default: () => false
+    },
+    markLike: {
+      type: Boolean,
+      default: () => false
     }
   },
   data: () => ({
@@ -126,7 +131,9 @@ export default {
     ...mapActions([
         'INC_VIEWS',
         'ADD_TO_FAVORITES',
-        'REMOVE_FROM_FAVORITES'
+        'REMOVE_FROM_FAVORITES',
+        'ADD_LIKE',
+        'REMOVE_LIKE'
     ]),
     read() {
       this.INC_VIEWS(this.note.id)
@@ -138,6 +145,15 @@ export default {
       } else {
         this.REMOVE_FROM_FAVORITES(this.note.id)
         console.log('toggle remove_to')
+      }
+    },
+    toggleLikes() {
+      if(!this.markLike) {
+        this.ADD_LIKE(this.note.id)
+        console.log('add_like')
+      } else {
+        this.REMOVE_LIKE(this.note.id)
+        console.log('remove_like')
       }
     }
   },
