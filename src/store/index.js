@@ -54,6 +54,7 @@ export default createStore({
             console.log(response)
             // if (response.data.status == 200) {
               console.log('SETTING USER INFO!')
+              commit('setUser', response.data.user)
               // localStorage.setItem('user', JSON.stringify(response.data.user))
               // localStorage.setItem('jwt', response.data.token)
               // this.$store.commit('toggleLogin',true)
@@ -131,7 +132,7 @@ export default createStore({
       }
       const data = userLikes.join(',')
 
-      axios.patch(host + '/updateLikes/' + likeId, {data})
+      axios.patch(host + '/updateLikes/' + state.user.id, {data})
           .then(() => { commit('updateLikes', data) })
           .catch(err => console.error('REMOVE_LIKE err',err))
       axios.patch(host + '/notes/decLikes/' + likeId)

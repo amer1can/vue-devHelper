@@ -29,16 +29,21 @@ export default {
         'user'
       ]),
     userFavorites() {
-      if(this.user.favorites === null) { return false }
-      else {
-        return this.user.favorites.toString().split(',')
-      }
+      if(this.user.id) {
+        if (this.user.favorites === null) {
+          return false
+        } else {
+          return this.user.favorites.toString().split(',')
+        }
+      } else return false
     },
     userLikes() {
-      if(this.user.likes === null) return false
-      else {
-        return this.user.likes.toString().split(',')
-      }
+      if(this.user.id) {
+        if (this.user.likes === null) return false
+        else {
+          return this.user.likes.toString().split(',')
+        }
+      } else return false
     },
   },
   mounted() {

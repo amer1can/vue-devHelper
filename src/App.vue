@@ -120,10 +120,10 @@ export default {
     if(!localStorage.getItem('user')) {
       this.$store.commit('toggleLogin',false)
     } else {
-      // const jwt = localStorage.getItem('jwt')
+      const jwt = localStorage.getItem('jwt')
       // console.log("USER!, ", user)
-      this.$store.commit('getUserFromStorage')
-      // await this.$store.dispatch('GET_CURRENT_USER', jwt)
+      // this.$store.commit('getUserFromStorage')
+      await this.$store.dispatch('GET_CURRENT_USER', jwt)
       this.$store.commit('toggleLogin',true)
     }
   },

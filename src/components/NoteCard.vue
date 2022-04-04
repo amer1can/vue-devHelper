@@ -68,7 +68,7 @@
           <v-btn
               size="x-small"
               icon="mdi-heart"
-              :color="markLike ? 'primary' : 'white'"
+              :color="markLike ? 'red' : 'white'"
               @click="toggleLikes"
           ></v-btn>
         </div>
@@ -137,6 +137,12 @@ export default {
     ]),
     read() {
       this.INC_VIEWS(this.note.id)
+      this.$router.push({
+        name: 'note',
+        query: {
+          id: this.note.id
+        }
+      })
     },
     toggleFavorites() {
       if(!this.markFavorite) {

@@ -5,6 +5,7 @@ import UserRegister from "@/views/auth/UserRegister";
 import UserDashboard from "@/views/user/UserDashboard";
 import AdminDashboard from "@/views/admin/AdminDashboard";
 import UserFavorites from "@/views/user/UserFavorites";
+import NoteCardSingle from "@/components/NoteCardSingle";
 
 const routes = [
   {
@@ -54,6 +55,15 @@ const routes = [
     }
   },
   {
+    path: '/note/',
+    name: 'note',
+    component: NoteCardSingle,
+    meta: {
+      requiresAuth: true,
+    },
+    props: true
+  },
+  {
     path: '/about',
     name: 'about',
     component: () => import('../views/AboutView.vue'),
@@ -69,13 +79,11 @@ router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     if(localStorage.getItem('jwt') == null) {
       next({
-        path: '/login',
-        params: { nextUrl: to.fullPath }
+        name: 'login',
+        // params: { nextUrl: to.fullPath }
       })
-      // this.$store.commit('toggleLogin', false)
     } else {
       const user = JSON.parse(localStorage.getItem('user'))
-      // this.$store.commit('toggleLogin', true)
       if(to.matched.some(record => record.meta.is_admin)) {
         if(user.is_admin == 1) {
           next()
@@ -88,10 +96,8 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if(localStorage.getItem('jwt') == null) {
-      // this.$store.commit('toggleLogin', false)
       next()
     } else {
-      // this.$store.commit('toggleLogin', true)
       next({ name: 'dashboard' })
     }
   } else {
