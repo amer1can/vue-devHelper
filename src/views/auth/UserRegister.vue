@@ -5,7 +5,7 @@
       variant="outlined"
   >
     <v-card-header>
-      <v-card-title>Register</v-card-title>
+      <v-card-title>Регистрация</v-card-title>
     </v-card-header>
 
     <v-card-text>
@@ -66,14 +66,14 @@ export default {
     is_admin: false,
     valid: true,
     nameRules: [
-      v => !!v || 'Name is required',
+      v => !!v || 'Введите имя',
     ],
     emailRules: [
-      v => !!v || 'Email is required',
-      v => /.+@.+/.test(v) || 'Email must be a valid'
+      v => !!v || 'Введите адрес эл.почты',
+      v => /.+@.+/.test(v) || 'Введите допустимый адрес'
     ],
     passRules: [
-      v => !!v || 'Password is required',
+      v => !!v || 'Введите пароль',
     ]
   }),
   methods: {
@@ -104,7 +104,7 @@ export default {
                 if(this.$route.params.nextUrl != null) {
                   console.log('check this: ',this.$router.push(this.$route.params.nextUrl))
                 } else {
-                  this.$router.push('/admin')
+                  this.$router.push('/admin/notes')
                 }
               }
             })
@@ -113,7 +113,7 @@ export default {
               console.error(err)
             })
       } else {
-        return alert('Passwords do not match')
+        return alert('Пароли не совпадают')
       }
     }
   }

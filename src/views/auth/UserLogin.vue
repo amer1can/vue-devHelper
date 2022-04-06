@@ -5,7 +5,7 @@
       variant="outlined"
   >
     <v-card-header>
-      <v-card-title>Login</v-card-title>
+      <v-card-title>Войти</v-card-title>
     </v-card-header>
 
     <v-card-text>
@@ -51,11 +51,11 @@ export default {
     password: '',
     error: null,
     emailRulesLogin: [
-        v => !!v || 'Email is required',
-        v => /.+@.+/.test(v) || 'Email must be a valid'
+        v => !!v || 'Введите адрес эл.почты',
+        v => /.+@.+/.test(v) || 'Введите допустимый адрес'
     ],
     passRulesLogin: [
-        v => !!v || 'Password is required',
+        v => !!v || 'Введите пароль',
     ],
   }),
   methods: {
@@ -81,7 +81,7 @@ export default {
                 }
                 else {
                   if(is_admin == 1){
-                    this.$router.push('admin')
+                    this.$router.push('/admin/notes')
                   }
                   else {
                     this.$router.push('home')

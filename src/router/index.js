@@ -3,9 +3,11 @@ import HomeView from '../views/HomeView.vue'
 import UserLogin from "@/views/auth/UserLogin";
 import UserRegister from "@/views/auth/UserRegister";
 import UserDashboard from "@/views/user/UserDashboard";
-import AdminDashboard from "@/views/admin/AdminDashboard";
+import AdminNotes from "@/views/admin/AdminNotes";
+import AdminUsers from "@/views/admin/AdminUsers";
 import UserFavorites from "@/views/user/UserFavorites";
 import NoteCardSingle from "@/components/NoteCardSingle";
+import NoteEdit from "@/components/admin/NoteEdit";
 
 const routes = [
   {
@@ -46,9 +48,36 @@ const routes = [
     }
   },
   {
-    path: '/admin',
-    name: 'admin',
-    component: AdminDashboard,
+    path: '/admin/notes',
+    name: 'admin-notes',
+    component: AdminNotes,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/admin/note/create',
+    name: 'note-create',
+    component: NoteEdit,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/admin/note',
+    name: 'note-edit',
+    component: NoteEdit,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: AdminUsers,
     meta: {
       requiresAuth: true,
       is_admin: true
@@ -80,7 +109,7 @@ router.beforeEach((to, from, next) => {
     if(localStorage.getItem('jwt') == null) {
       next({
         name: 'login',
-        // params: { nextUrl: to.fullPath }
+        params: { nextUrl: to.fullPath }
       })
     } else {
       const user = JSON.parse(localStorage.getItem('user'))
@@ -88,7 +117,7 @@ router.beforeEach((to, from, next) => {
         if(user.is_admin == 1) {
           next()
         } else {
-          next({ name: 'dashboard' })
+          next({ name: 'favorites' })
         }
       } else {
         next()
@@ -98,7 +127,7 @@ router.beforeEach((to, from, next) => {
     if(localStorage.getItem('jwt') == null) {
       next()
     } else {
-      next({ name: 'dashboard' })
+      next({ name: 'home' })
     }
   } else {
     next()

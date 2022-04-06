@@ -1,15 +1,23 @@
 <template>
   <v-app>
+    <AppSnackbar ref="snack" />
     <v-app-bar app>
       <v-app-bar-nav-icon
           @click="leftDrawer = !leftDrawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-title>
         <router-link to="/" class="mx-2">devHelper</router-link>
+        <v-btn
+            @click="this.$root.AppSnackbar.show({text: 'saliam!'})"
+        >snack</v-btn>
+        <v-btn
+            @click="this.$toast.show('Hellous')"
+        >snack2</v-btn>
+
       </v-app-bar-title>
 
-      <router-link v-if="!isLoggedIn" to="/register" class="mx-2">Register</router-link>
-      <router-link v-if="!isLoggedIn" to="/login" class="mx-2">Login</router-link>
+      <router-link v-if="!isLoggedIn" to="/register" class="mx-2">Регистрация</router-link>
+      <router-link v-if="!isLoggedIn" to="/login" class="mx-2">Войти</router-link>
 
       <v-btn icon
              v-if="isLoggedIn"
@@ -23,15 +31,13 @@
         app
         v-model="leftDrawer"
     >
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
+      <v-list-item class="flex-column">
+          <v-list-item-title class="text-h6 align-self-start">
             Welcome!
           </v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-subtitle class="align-self-start">
             Have a nice day!
           </v-list-item-subtitle>
-        </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
@@ -66,11 +72,12 @@
               subtitle="Logged in"
           ></v-list-item>
           <v-list-item>
-            <v-btn icon
-                   @click="userLogout"
-                   v-if="isLoggedIn"
+            <v-btn
+                @click="userLogout"
+                v-if="isLoggedIn"
+                class="px-2"
             >
-              <v-icon>mdi-exit-to-app</v-icon>
+              <span class="logout">Выйти</span>
             </v-btn>
           </v-list-item>
         </div>
@@ -81,9 +88,19 @@
       <v-divider></v-divider>
 
       <v-list density="compact" nav>
-        <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-        <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
-        <v-list-item prepend-icon="mdi-account-group-outline" title="Users" value="users"></v-list-item>
+        <router-link to="/">
+          <v-list-item prepend-icon="mdi-home-city" title="Главная">
+          </v-list-item>
+        </router-link>
+
+        <router-link to="/admin/notes">
+          <v-list-item prepend-icon="mdi-account" title="Записи"></v-list-item>
+        </router-link>
+
+        <router-link to="/admin/users">
+          <v-list-item prepend-icon="mdi-account-group-outline" title="Пользователи"></v-list-item>
+        </router-link>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -97,17 +114,21 @@
 
 <script>
 import {mapState, mapMutations, mapActions} from 'vuex'
+import AppSnackbar from "@/components/AppSnackbar";
 
 export default {
   name: 'App',
+  components: {AppSnackbar},
   data: () => ({
     items: [
-      { title: 'Home page', icon: 'mdi-view-dashboard', path: '/' },
-      { title: 'Favorites', icon: 'mdi-image', path: '/favorites' },
-      { title: 'About', icon: 'mdi-help-box', path: '/about' },
+      { title: 'Главная', icon: 'mdi-view-dashboard', path: '/' },
+      { title: 'Избранное', icon: 'mdi-image', path: '/favorites' },
+      { title: 'Инфо', icon: 'mdi-help-box', path: '/about' },
     ],
     leftDrawer: false,
     rightDrawer: false,
+    snackbar: false,
+    snackbarText: ''
   }),
   computed: {
     ...mapState([
@@ -115,21 +136,25 @@ export default {
         'isLoggedIn'
     ]),
   },
-  async mounted() {
-    this.GET_ALL_NOTES()
+  async beforeMount() {
+    await this.GET_ALL_NOTES()
+      .then(res => this.setNotesToStore(res.data))
+
     if(!localStorage.getItem('user')) {
       this.$store.commit('toggleLogin',false)
     } else {
       const jwt = localStorage.getItem('jwt')
-      // console.log("USER!, ", user)
-      // this.$store.commit('getUserFromStorage')
-      await this.$store.dispatch('GET_CURRENT_USER', jwt)
+      this.$store.dispatch('GET_CURRENT_USER', jwt) //проблема какая-то
       this.$store.commit('toggleLogin',true)
     }
   },
+  mounted() {
+    this.$root.AppSnackbar = this.$refs.snack
+  },
   methods: {
     ...mapMutations([
-        'toggleLogin'
+        'toggleLogin',
+        'setNotesToStore',
     ]),
     ...mapActions([
         'GET_ALL_NOTES'
@@ -140,7 +165,7 @@ export default {
       this.toggleLogin(false)
       this.rightDrawer = false
       this.$router.push('/')
-    }
+    },
   }
 }
 </script>
@@ -152,5 +177,8 @@ html {
 a {
   color: burlywood;
   text-decoration: none
+}
+.logout {
+  font-size: .6rem;
 }
 </style>

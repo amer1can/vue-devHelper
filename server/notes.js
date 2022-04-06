@@ -15,7 +15,8 @@ class Notes {
                 text text,
                 tags string,
                 views number,
-                likes number
+                likes number,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )`
         return this.db.run(sql)
     }

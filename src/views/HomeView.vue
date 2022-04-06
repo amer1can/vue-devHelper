@@ -1,20 +1,20 @@
 <template>
   <div>
-    <h1 class="text-center">Home</h1>
+    <h1 class="text-center">Главная</h1>
     <div class="notes-wrapper" v-if="notes">
       <NoteCard v-for="note in notes"
                 :key="note.id"
                 :note="note"
-                :markFavorite="userFavorites ? userFavorites.includes((note.id).toString()) : false"
-                :markLike="userLikes ? userLikes.includes((note.id).toString()) : false"
+                :markFavorite="userFavoritesIndexes ? userFavoritesIndexes.includes((note.id).toString()) : false"
+                :markLike="userLikesIndexes ? userLikesIndexes.includes((note.id).toString()) : false"
       />
     </div>
-    <div v-else><h1 class="text-center">No notes found (</h1></div>
+    <div v-else><h1 class="text-center">Статей нет</h1></div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 import NoteCard from "@/components/NoteCard";
 
 export default {
@@ -28,33 +28,20 @@ export default {
         'notes',
         'user'
       ]),
-    userFavorites() {
-      if(this.user.id) {
-        if (this.user.favorites === null) {
-          return false
-        } else {
-          return this.user.favorites.toString().split(',')
-        }
-      } else return false
-    },
-    userLikes() {
-      if(this.user.id) {
-        if (this.user.likes === null) return false
-        else {
-          return this.user.likes.toString().split(',')
-        }
-      } else return false
-    },
+    ...mapGetters([
+        'userLikesIndexes',
+        'userFavoritesIndexes'
+    ]),
   },
-  mounted() {
-    // console.log(this.userFavorites.includes('1'))
+  beforeMount() {
+
   }
 }
 </script>
 
 <style>
 .notes-wrapper {
-  margin: 0px auto;
+  margin: 0 auto;
   max-width: 1200px;
   display: flex;
   flex-wrap: wrap;
